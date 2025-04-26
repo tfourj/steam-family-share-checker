@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Steam Family Share Checker</title>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" defer></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -87,34 +88,38 @@
 <body>
     <h1>Steam Family Share Checker</h1>
     <input type="text" id="appLinkInput" placeholder="Enter Steam App Link/ID">
-    <button onclick="checkFamilyShare()">Check</button>
-    <button onclick="clearSteamAppResults()">Clear</button>
+    <button onclick="checkFamilyShare()" disabled>Check</button>
+    <button onclick="clearSteamAppResults()" disabled>Clear</button>
     <div id="result" style="padding-top:10px">Input a Steam game's link to see if it's family sharable.</div>
     <div id="familyShareStatus" style="display: none;padding-top:10px">
         Status: <span id="statusIndicator">&#9744;</span>
     </div>
 
     <h2>Search Games</h2>
-    <input type="text" id="searchInput" placeholder="Enter game name">
-    <button onclick="searchGames()">Search</button>
-    <button onclick="clearSearchResults()">Clear</button>
+    <input type="text" id="searchInput" placeholder="Enter game name" disabled>
+    <button onclick="searchGames()" disabled>Search</button>
+    <button onclick="clearSearchResults()" disabled>Clear</button>
     <div id="searchStatus" style="color: white;"></div>
     <div id="gameList"></div>
 
+    <div class="checkbox mb-3">
+    <div 
+        class="cf-turnstile" 
+        data-sitekey="0x4AAAAAABUBL_8zEqDZwZfT"
+        data-size="normal" 
+        data-theme="dark"
+        data-callback="turnstileCallback"
+    ></div>
+    <input type="hidden" id="turnstileToken" />
+</div>
+
     <div class="credits">
         <p>Created by <a href="https://github.com/tfourj" target="_blank">tfourj</a>. <a href="https://github.com/tfourj/steam-family-share-checker" target="_blank">GitHub Repository</a></p>
-    </div>
-
-    <div id="appStatus">
-        Server status: <span id="fetchstatusIndicator">&#x1F7E0;</span>
     </div>
 
     <script src="script.js"></script>
     <script src="search.js"></script>
     <script src="functions.js"></script>
     <script src="customappid.js"></script>
-    <script>
-        window.onload = checkAppStatus();
-    </script>
 </body>
 </html>

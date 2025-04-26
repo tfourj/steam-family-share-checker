@@ -1,9 +1,41 @@
+let globalAuthKey = null;
+let turnstileToken = null;
+let turnstileReady = false;
+
+// Cloudflare Turnstile callback
+function turnstileCallback(token) {
+    turnstileToken = token;
+    getAuthKey(turnstileToken).then(authKey => {
+        globalAuthKey = authKey;
+    });
+    turnstileReady = true;
+    document.getElementById('searchInput').disabled = false;
+    document.querySelectorAll('button').forEach(btn => btn.disabled = false);
+}
+
+// Fetch authKey using the Turnstile token
+async function getAuthKey(token) {
+    const res = await fetch('https://steamfetch.13584595.xyz/challenge', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token })
+    });
+    if (!res.ok) throw new Error('Failed to get authKey');
+    const { authKey } = await res.json();
+    if (!authKey) throw new Error('authKey missing');
+    return authKey;
+}
+
 async function fetchWithRetries(url, maxTotalTime = 5000, responseType = 'text') {
     const startTime = Date.now();
 
     while (Date.now() - startTime < maxTotalTime) {
         try {
-            const response = await fetch(url);
+            const options = {};
+            if (globalAuthKey) {
+                options.headers = { 'x-auth-key': globalAuthKey };
+            }
+            const response = await fetch(url, options);
             if (response.ok) {
                 if (responseType === 'json') {
                     return await response.json(); // Return JSON if specified
@@ -22,24 +54,6 @@ async function fetchWithRetries(url, maxTotalTime = 5000, responseType = 'text')
         }
     }
     throw new Error('Unable to fetch within the allowed time frame');
-}
-
-async function checkAppStatus() {
-    try {
-        const response = await fetch('https://steamfetch.13584595.xyz/status');
-        const text = await response.text(); // Get the text content of the response
-        console.log('Response:', text); // Log the response for debugging
-        const fetchstatusIndicator = document.getElementById('fetchstatusIndicator');
-        if (text === 'OK') {
-            fetchstatusIndicator.textContent = '🟢'; // Green Circle
-        } else {
-            fetchstatusIndicator.textContent = '🔴'; // Red Circle
-        }
-    } catch (error) {
-        console.error('Error fetching app status:', error);
-        const fetchstatusIndicator = document.getElementById('fetchstatusIndicator');
-        fetchstatusIndicator.textContent = '🔴'; // Set to red in case of error
-    }
 }
 
 document.addEventListener("DOMContentLoaded", function() {

@@ -1,4 +1,8 @@
 async function searchGames() {
+    if (!turnstileReady) {
+        alert('Please complete the Turnstile challenge first.');
+        return;
+    }
     const searchInput = document.getElementById('searchInput').value.trim();
     if (!searchInput) {
         alert('Please enter a game name.');

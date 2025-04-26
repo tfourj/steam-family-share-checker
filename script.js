@@ -1,4 +1,8 @@
 async function checkFamilyShare() {
+    if (!turnstileReady) {
+        alert('Please complete the Turnstile challenge first.');
+        return;
+    }
     hideFamilyShareStatus();
     const appLink = document.getElementById('appLinkInput').value;
 

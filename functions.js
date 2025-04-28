@@ -10,6 +10,7 @@ function turnstileCallback(token) {
     });
     turnstileReady = true;
     document.getElementById('searchInput').disabled = false;
+    document.getElementById('appLinkInput').disabled = false;
     document.querySelectorAll('button').forEach(btn => btn.disabled = false);
 }
 

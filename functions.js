@@ -14,6 +14,31 @@ function turnstileCallback(token) {
     document.querySelectorAll('button').forEach(btn => btn.disabled = false);
 }
 
+// Turnstile expired
+function turnstileExpiredCallback() {
+    turnstileReady = false;
+    globalAuthKey = null;
+    document.getElementById('searchInput').disabled = true;
+    document.getElementById('appLinkInput').disabled = true;
+    document.querySelectorAll('button').forEach(btn => btn.disabled = true);
+    if (confirm('Turnstile session expired. Do you want to retry the challenge?')) {
+        if (window.turnstile) {
+            turnstile.reset(); // Resets the Turnstile widget
+        }
+    }
+}
+
+// Turnstile error
+function turnstileErrorCallback() {
+    turnstileReady = false;
+    globalAuthKey = null;
+    if (confirm('Turnstile encountered an error. Do you want to retry the challenge?')) {
+        if (window.turnstile) {
+            turnstile.reset();
+        }
+    }
+}
+
 // Fetch authKey using the Turnstile token
 async function getAuthKey(token) {
     const res = await fetch('https://steamfetch.13584595.xyz/challenge', {

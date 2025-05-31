@@ -41,7 +41,7 @@ function turnstileErrorCallback() {
 
 // Fetch authKey using the Turnstile token
 async function getAuthKey(token) {
-    const res = await fetch('https://steamfetch.13584595.xyz/challenge', {
+    const res = await fetch(`${CONFIG.API_DOMAIN}/challenge`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token })

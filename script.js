@@ -24,7 +24,7 @@ async function checkFamilyShare() {
     displayResult1('Fetching data', 'white', true);
 
     //const url = `https://api.allorigins.win/raw?url=https://store.steampowered.com/api/appdetails?appids=${appId}&l=english`; //Api for testing
-    const url = `https://steamfetch.13584595.xyz/raw?url=https://store.steampowered.com/api/appdetails?appids=${appId}&l=english`;
+    const url = `${CONFIG.API_DOMAIN}/raw?url=https://store.steampowered.com/api/appdetails?appids=${appId}&l=english`;
 
     try {
         const data = await fetchWithRetries(url, 5000, 'json');

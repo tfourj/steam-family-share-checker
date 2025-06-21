@@ -115,24 +115,28 @@
     ></div>
     <input type="hidden" id="turnstileToken" />
 </div>
-<div style="margin-top:10px;">
-    <img src="https://status.steamshare.site/api/badge/3/status?style=flat-square" alt="Server Status Badge" />
+
+<div id="appStatus" style="margin-top:10px;">
+    Server status: <span id="fetchstatusIndicator">&#x1F7E0;</span>
 </div>
 
-    <div class="credits">
-        <p>
-            Created by <a href="https://github.com/tfourj" target="_blank">tfourj</a>. 
-            <a href="https://github.com/tfourj/steam-family-share-checker" target="_blank">GitHub Repository</a>
-            &nbsp;|&nbsp;
-            <strong>Server Status:</strong>
-            <a href="https://status.steamshare.site" target="_blank">status.steamshare.site</a>
-        </p>
-    </div>
+<div class="credits">
+    <p>
+        Created by <a href="https://github.com/tfourj" target="_blank">tfourj</a>. 
+        <a href="https://github.com/tfourj/steam-family-share-checker" target="_blank">GitHub Repository</a>
+        &nbsp;|&nbsp;
+        <strong>Server Status:</strong>
+        <a href="https://status.steamshare.site" target="_blank">status.steamshare.site</a>
+    </p>
+</div>
 
     <script src="config.js"></script>
     <script src="script.js"></script>
     <script src="search.js"></script>
     <script src="functions.js"></script>
     <script src="customappid.js"></script>
+    <script>
+        window.onload = checkAppStatus();
+    </script>
 </body>
 </html>

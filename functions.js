@@ -52,6 +52,25 @@ async function getAuthKey(token) {
     return authKey;
 }
 
+async function checkAppStatus() {
+    try {
+        const response = await fetch(CONFIG.APP_STATUS_URL);
+        const text = await response.text(); 
+        console.log('Response:', text);
+        const fetchstatusIndicator = document.getElementById('fetchstatusIndicator');
+        if (text.includes('Status') && text.includes('Up') && text.indexOf('Status') < text.indexOf('Up')) {
+            fetchstatusIndicator.textContent = '🟢 Online'; // Green Circle
+        } else {
+            fetchstatusIndicator.textContent = '🔴 Offline'; // Red Circle
+        }
+    } catch (error) {
+        console.error('Error fetching app status:', error);
+        const fetchstatusIndicator = document.getElementById('fetchstatusIndicator');
+        fetchstatusIndicator.textContent = '🔴 Offline (Error)'; // Set to red in case of error
+    }
+}
+
+
 async function fetchWithRetries(url, maxTotalTime = 5000, responseType = 'text') {
     const startTime = Date.now();
 

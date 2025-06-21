@@ -60,6 +60,10 @@ async function checkAppStatus() {
         const fetchstatusIndicator = document.getElementById('fetchstatusIndicator');
         if (text.includes('Status') && text.includes('Up') && text.indexOf('Status') < text.indexOf('Up')) {
             fetchstatusIndicator.textContent = '🟢 Online'; // Green Circle
+        } else if (text.includes('Status') && text.includes('Pending') && text.indexOf('Status') < text.indexOf('Pending')) {
+            fetchstatusIndicator.textContent = '🟡 Pending...'; // Yellow Circle
+        } else if (text.includes('Status') && text.includes('Down') && text.indexOf('Status') < text.indexOf('Down')) {
+            fetchstatusIndicator.textContent = '🔴 Offline'; // Red Circle
         } else {
             fetchstatusIndicator.textContent = '🔴 Offline'; // Red Circle
         }

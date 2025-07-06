@@ -67,7 +67,7 @@ async function searchGames() {
                             <p class="game-price">${price}</p>
                         </div>
                         <div class="game-actions">
-                            <button class="btn btn-primary btn-sm" onclick="selectGame('${appId}'); event.stopPropagation();">Check Family Share</button>
+                            <button class="btn btn-primary" onclick="selectGame('${appId}'); event.stopPropagation();">Check Family Share</button>
                         </div>
                     </div>
                 `;

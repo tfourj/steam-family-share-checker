@@ -114,10 +114,8 @@ let intervalId; // Define intervalId outside the function
 function displayResult(message, color, animate = false) {
     const searchStatus = document.getElementById('searchStatus');
     
-    // Create or update status display container
-    if (!searchStatus.classList.contains('status-display')) {
-        searchStatus.className = 'status-display';
-    }
+    // Show the element and apply proper styling
+    searchStatus.style.display = 'block';
     
     // Apply color styling
     if (color === 'green') {
@@ -150,9 +148,10 @@ function displayResult(message, color, animate = false) {
 }
 
 function clearDisplayResult() {
-    displayResult();
     const searchStatus = document.getElementById('searchStatus');
     searchStatus.textContent = ''; // Clear the text content
+    searchStatus.className = ''; // Remove all classes including status-display
+    searchStatus.style.display = 'none'; // Hide the element completely
 }
 
 function correctNameSearch(correctName) {

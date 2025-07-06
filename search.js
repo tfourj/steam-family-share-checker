@@ -57,25 +57,23 @@ async function searchGames() {
                 const logoUrl = game.querySelector('.search_capsule img').src;
 
                 const gameItem = document.createElement('div');
-                gameItem.classList.add('gameItem');
+                gameItem.classList.add('game-card');
                 gameItem.innerHTML = `
-                    <div class="searchResult" style="display: flex; align-items: center; cursor: pointer;">
-                        <img src="${logoUrl}" alt="${name}" style="width: 50px; height: auto; max-height: 50px; margin-right: 10px; object-fit: contain;">
-                        <div>
-                            <p>${name}</p>
-                            <p style="font-size: smaller;">AppID: ${appId}</p>
+                    <div class="game-card-content">
+                        <img src="${logoUrl}" alt="${name}" class="game-image">
+                        <div class="game-info">
+                            <h3 class="game-title">${name}</h3>
+                            <p class="game-meta">App ID: ${appId}</p>
+                            <p class="game-price">${price}</p>
                         </div>
-                        <div style="margin-left: auto;">
-                            <p style="font-size: smaller;">${price}</p>
-                            <button onclick="selectGame('${appId}')">Check Family Share</button>
+                        <div class="game-actions">
+                            <button class="btn btn-primary" onclick="selectGame('${appId}'); event.stopPropagation();">Check Family Share</button>
                         </div>
                     </div>
                 `;
                 gameList.appendChild(gameItem);
-                // displayResult('Game list found and displayed.', 'white', false);
-                clearDisplayResult();
 
-                gameItem.addEventListener('click', () => {
+                gameItem.addEventListener('click', (event) => {
                     const buttonClicked = event.target.tagName.toLowerCase() === 'button';
                     if (!buttonClicked) {
                         searchFieldClicked(appId);
@@ -83,6 +81,9 @@ async function searchGames() {
                 });
             }
         });
+        
+        // Clear the status display after successfully displaying games
+        clearDisplayResult();
     } catch (error) {
         console.error('Error searching games:', error);
         displayResult('An error occurred while fetching game data. Please reload the website and try to search for game again.', 'white', false); // Display error status
@@ -108,19 +109,33 @@ function clearSearchResults() {
     const gameList = document.getElementById('gameList');
     document.getElementById('searchInput').value = '';
     gameList.innerHTML = '';
+    clearDisplayResult(); // Hide the status bar when clearing results
 }
 
 let intervalId; // Define intervalId outside the function
 
 function displayResult(message, color, animate = false) {
-    const searchStatus = document.getElementById('searchStatus'); // Get search status element
-    searchStatus.textContent = message;
-    searchStatus.style.color = color;
+    const searchStatus = document.getElementById('searchStatus');
+    
+    // Show the element and apply proper styling
+    searchStatus.style.display = 'block';
+    
+    // Apply color styling
+    if (color === 'green') {
+        searchStatus.className = 'status-display status-success';
+    } else if (color === 'red') {
+        searchStatus.className = 'status-display status-error';
+    } else if (color === 'orange') {
+        searchStatus.className = 'status-display status-warning';
+    } else {
+        searchStatus.className = 'status-display';
+    }
 
     // Clear any existing animation interval
     clearInterval(intervalId);
 
     if (animate) {
+        searchStatus.classList.add('loading-dots');
         let dots = '';
         intervalId = setInterval(() => {
             dots += '.';
@@ -130,14 +145,18 @@ function displayResult(message, color, animate = false) {
             }
         }, 500);
     } else {
+        searchStatus.classList.remove('loading-dots');
         searchStatus.innerHTML = message; // Set innerHTML to display HTML content
     }
 }
 
 function clearDisplayResult() {
-    displayResult();
     const searchStatus = document.getElementById('searchStatus');
+    
+    clearInterval(intervalId); // Stop the animation interval
     searchStatus.textContent = ''; // Clear the text content
+    searchStatus.className = ''; // Remove all classes including status-display
+    searchStatus.style.display = 'none'; // Hide the element completely
 }
 
 function correctNameSearch(correctName) {

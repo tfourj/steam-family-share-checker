@@ -110,21 +110,36 @@ let intervalId1;
 
 function displayResult1(message, color, animatee = false) {
     const resultDiv = document.getElementById('result');
+    const resultContainer = document.getElementById('result-container');
+    
     resultDiv.textContent = message;
-    resultDiv.style.color = color;
+    
+    // Apply color styling to the container
+    if (color === 'green') {
+        resultContainer.className = 'status-display status-success';
+    } else if (color === 'red') {
+        resultContainer.className = 'status-display status-error';
+    } else if (color === 'orange') {
+        resultContainer.className = 'status-display status-warning';
+    } else {
+        resultContainer.className = 'status-display';
+    }
 
     // Clear any existing animation interval
     clearInterval(intervalId1);
 
     if (animatee) {
+        resultDiv.classList.add('loading-dots');
         let dots = '';
         intervalId1 = setInterval(() => {
             dots += '.';
-            result.textContent = message + dots;
+            resultDiv.textContent = message + dots;
             if (dots.length === 4) {
                 dots = '';
             }
         }, 500);
+    } else {
+        resultDiv.classList.remove('loading-dots');
     }
 }
 

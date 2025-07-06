@@ -64,10 +64,10 @@ async function searchGames() {
                         <div class="game-info">
                             <h3 class="game-title">${name}</h3>
                             <p class="game-meta">App ID: ${appId}</p>
+                            <p class="game-price">${price}</p>
                         </div>
                         <div class="game-actions">
-                            <p class="game-price">${price}</p>
-                            <button class="btn btn-primary btn-sm" onclick="selectGame('${appId}')">Check</button>
+                            <button class="btn btn-primary btn-sm" onclick="selectGame('${appId}'); event.stopPropagation();">Check Family Share</button>
                         </div>
                     </div>
                 `;

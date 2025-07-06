@@ -265,6 +265,7 @@
         /* Game List */
         .game-grid {
             display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: var(--space-md);
             margin-top: var(--space-lg);
         }
@@ -272,44 +273,48 @@
         .game-card {
             background-color: var(--color-bg-surface-variant);
             border: 1px solid var(--color-border);
-            border-radius: var(--radius-md);
-            padding: var(--space-md);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
             transition: all var(--transition-fast);
             cursor: pointer;
+            box-shadow: var(--shadow-sm);
         }
 
         .game-card:hover {
             border-color: var(--color-accent-primary);
-            transform: translateY(-2px);
+            transform: translateY(-4px);
             box-shadow: var(--shadow-lg);
+            background-color: var(--color-bg-surface-hover);
         }
 
         .game-card-content {
             display: flex;
-            align-items: center;
+            flex-direction: column;
             gap: var(--space-md);
+            height: 100%;
         }
 
         .game-image {
-            width: 60px;
-            height: 60px;
-            border-radius: var(--radius-sm);
+            width: 100%;
+            height: 120px;
+            border-radius: var(--radius-md);
             object-fit: cover;
             flex-shrink: 0;
         }
 
         .game-info {
             flex: 1;
-            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xs);
         }
 
         .game-title {
-            font-weight: 500;
-            margin: 0 0 var(--space-xs) 0;
+            font-weight: 600;
+            font-size: var(--font-size-lg);
+            margin: 0;
             color: var(--color-text-primary);
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+            line-height: 1.3;
         }
 
         .game-meta {
@@ -318,17 +323,22 @@
             margin: 0;
         }
 
-        .game-actions {
-            display: flex;
-            flex-direction: column;
-            gap: var(--space-xs);
-            align-items: flex-end;
-        }
-
         .game-price {
             font-size: var(--font-size-sm);
-            color: var(--color-text-secondary);
+            color: var(--color-accent-primary);
+            font-weight: 500;
             margin: 0;
+        }
+
+        .game-actions {
+            margin-top: auto;
+            display: flex;
+            justify-content: center;
+        }
+
+        .game-actions .btn {
+            width: 100%;
+            justify-content: center;
         }
 
         /* Turnstile Container */
@@ -422,13 +432,21 @@
                 gap: var(--space-sm);
             }
 
-            .game-card-content {
-                flex-direction: column;
-                text-align: center;
+            .game-grid {
+                grid-template-columns: 1fr;
+                gap: var(--space-sm);
             }
 
-            .game-actions {
-                align-items: center;
+            .game-card {
+                padding: var(--space-md);
+            }
+
+            .game-image {
+                height: 100px;
+            }
+
+            .game-title {
+                font-size: var(--font-size-base);
             }
         }
 

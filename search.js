@@ -72,7 +72,6 @@ async function searchGames() {
                     </div>
                 `;
                 gameList.appendChild(gameItem);
-                clearDisplayResult();
 
                 gameItem.addEventListener('click', (event) => {
                     const buttonClicked = event.target.tagName.toLowerCase() === 'button';
@@ -82,6 +81,9 @@ async function searchGames() {
                 });
             }
         });
+        
+        // Clear the status display after successfully displaying games
+        clearDisplayResult();
     } catch (error) {
         console.error('Error searching games:', error);
         displayResult('An error occurred while fetching game data. Please reload the website and try to search for game again.', 'white', false); // Display error status
@@ -107,6 +109,7 @@ function clearSearchResults() {
     const gameList = document.getElementById('gameList');
     document.getElementById('searchInput').value = '';
     gameList.innerHTML = '';
+    clearDisplayResult(); // Hide the status bar when clearing results
 }
 
 let intervalId; // Define intervalId outside the function
@@ -149,6 +152,8 @@ function displayResult(message, color, animate = false) {
 
 function clearDisplayResult() {
     const searchStatus = document.getElementById('searchStatus');
+    
+    clearInterval(intervalId); // Stop the animation interval
     searchStatus.textContent = ''; // Clear the text content
     searchStatus.className = ''; // Remove all classes including status-display
     searchStatus.style.display = 'none'; // Hide the element completely

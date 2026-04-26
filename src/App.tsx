@@ -301,6 +301,7 @@ function App() {
         />
 
         <StatusSection
+          authPhase={authState.phase}
           authMessage={authState.message}
           authTone={authTone}
           serverStatus={serverStatus}

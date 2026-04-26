@@ -318,6 +318,56 @@ input {
   min-height: 70px;
   display: flex;
   align-items: center;
+  justify-content: center;
+}
+
+.turnstile-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgba(5, 5, 5, 0.78);
+  backdrop-filter: blur(10px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 160ms ease,
+    visibility 160ms ease;
+}
+
+.turnstile-overlay.is-visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.turnstile-dialog {
+  width: min(100%, 27rem);
+  display: grid;
+  gap: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  background: var(--panel);
+  padding: 1.25rem;
+  box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.5);
+}
+
+.turnstile-dialog h2 {
+  margin: 0;
+  font-size: 1.35rem;
+  letter-spacing: -0.02em;
+}
+
+.turnstile-message {
+  margin: 0;
+  color: var(--text-soft);
+}
+
+.turnstile-actions {
+  justify-content: flex-end;
 }
 
 .server-status {
@@ -393,6 +443,19 @@ input {
 
   .game-image {
     width: 100%;
+  }
+
+  .turnstile-overlay {
+    align-items: end;
+    padding: 0.75rem;
+  }
+
+  .turnstile-dialog {
+    width: 100%;
+  }
+
+  .turnstile-actions .button {
+    flex: 1 1 8rem;
   }
 }
 

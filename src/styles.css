@@ -449,11 +449,6 @@ input {
     width: 100%;
   }
 
-  .turnstile-overlay {
-    align-items: end;
-    padding: 0.75rem;
-  }
-
   .turnstile-dialog {
     width: 100%;
   }

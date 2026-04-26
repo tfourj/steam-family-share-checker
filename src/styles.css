@@ -108,6 +108,10 @@ input {
   grid-column: 1 / -1;
 }
 
+.status-panel {
+  grid-column: 1 / -1;
+}
+
 .panel {
   background: var(--panel);
   border: 1px solid var(--border);

@@ -57,7 +57,7 @@ export function StatusSection({
 
   return (
     <>
-      <section className="panel">
+      <section className="panel status-panel">
         <div className="panel-heading">
           <div>
             <p className="panel-kicker">Status & settings</p>

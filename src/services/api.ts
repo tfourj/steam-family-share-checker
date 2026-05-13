@@ -1,6 +1,20 @@
 import { appConfig } from '../utils/config';
 import type { FamilyShareCheckResult, SearchGame, ServerStatus, SteamAppDetailsResponse } from '../utils/types';
 
+const AUTH_KEY_STORAGE_KEY = 'steam-share-auth-key';
+
+export function getSavedAuthKey() {
+  return window.localStorage.getItem(AUTH_KEY_STORAGE_KEY);
+}
+
+export function saveAuthKey(authKey: string) {
+  window.localStorage.setItem(AUTH_KEY_STORAGE_KEY, authKey);
+}
+
+export function clearSavedAuthKey() {
+  window.localStorage.removeItem(AUTH_KEY_STORAGE_KEY);
+}
+
 async function fetchWithRetries(url: string, authKey?: string, responseType: 'json' | 'text' = 'text') {
   const maxTotalTime = 5000;
   const startTime = Date.now();
@@ -48,6 +62,26 @@ export async function getAuthKey(token: string) {
   }
 
   return data.authKey;
+}
+
+export async function validateAuthKey(authKey: string) {
+  const response = await fetch(`${appConfig.apiDomain}/auth/validate`, {
+    headers: {
+      'x-auth-key': authKey,
+    },
+  });
+
+  if (response.status === 401 || response.status === 403) {
+    return false;
+  }
+
+  if (!response.ok) {
+    throw new Error('Failed to validate the saved verification.');
+  }
+
+  const data = (await response.json()) as { valid?: boolean };
+
+  return data.valid === true;
 }
 
 export async function getServerStatus(): Promise<ServerStatus> {

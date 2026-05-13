@@ -2,7 +2,16 @@ import { useEffect, useMemo, useState } from 'react';
 import { QuickCheckSection } from './components/QuickCheckSection';
 import { SearchSection } from './components/SearchSection';
 import { StatusSection } from './components/StatusSection';
-import { getAuthKey, getServerStatus, getShareCheckResult, searchGamesByName } from './services/api';
+import {
+  clearSavedAuthKey,
+  getAuthKey,
+  getSavedAuthKey,
+  getServerStatus,
+  getShareCheckResult,
+  saveAuthKey,
+  searchGamesByName,
+  validateAuthKey,
+} from './services/api';
 import { DEFAULT_CHECK_MESSAGE, DISABLED_FAMILY_SHARE_APPS } from './utils/constants';
 import { extractAppId, isRawAppId } from './utils/steam';
 import type {
@@ -31,10 +40,10 @@ function App() {
   const [appInput, setAppInput] = useState('');
   const [searchInput, setSearchInput] = useState('');
   const [authState, setAuthState] = useState<AuthState>({
-    phase: 'idle',
+    phase: 'checking',
     authKey: null,
     token: null,
-    message: 'Complete the Turnstile challenge to enable search and checks.',
+    message: 'Checking saved verification...',
   });
   const [resultState, setResultState] = useState<AppResultState>(initialResultState);
   const [searchState, setSearchState] = useState<SearchResultState>(initialSearchState);
@@ -42,6 +51,66 @@ function App() {
   const [serverStatus, setServerStatus] = useState<ServerStatus>('pending');
 
   const controlsDisabled = authState.phase !== 'ready';
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const savedAuthKey = getSavedAuthKey();
+
+    if (!savedAuthKey) {
+      setAuthState({
+        phase: 'idle',
+        authKey: null,
+        token: null,
+        message: 'Complete the Turnstile challenge to enable search and checks.',
+      });
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    void validateAuthKey(savedAuthKey)
+      .then((isValid) => {
+        if (cancelled) {
+          return;
+        }
+
+        if (isValid) {
+          setAuthState({
+            phase: 'ready',
+            authKey: savedAuthKey,
+            token: null,
+            message: 'Saved verification restored. Search and quick check are enabled.',
+          });
+          return;
+        }
+
+        clearSavedAuthKey();
+        setAuthState({
+          phase: 'idle',
+          authKey: null,
+          token: null,
+          message: 'Complete the Turnstile challenge to enable search and checks.',
+        });
+      })
+      .catch((error) => {
+        if (cancelled) {
+          return;
+        }
+
+        clearSavedAuthKey();
+        setAuthState({
+          phase: 'error',
+          authKey: null,
+          token: null,
+          message: error instanceof Error ? error.message : 'Failed to validate the saved verification.',
+        });
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -89,6 +158,7 @@ function App() {
 
     try {
       const authKey = await getAuthKey(token);
+      saveAuthKey(authKey);
       setAuthState({
         phase: 'ready',
         authKey,
@@ -107,6 +177,7 @@ function App() {
   }
 
   function handleTurnstileExpired() {
+    clearSavedAuthKey();
     setAuthState({
       phase: 'expired',
       authKey: null,
@@ -116,6 +187,7 @@ function App() {
   }
 
   function handleTurnstileError() {
+    clearSavedAuthKey();
     setAuthState({
       phase: 'error',
       authKey: null,

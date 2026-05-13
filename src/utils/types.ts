@@ -2,7 +2,7 @@ export type StatusTone = 'neutral' | 'success' | 'warning' | 'error';
 export type ServerStatus = 'online' | 'pending' | 'offline';
 
 export type AuthState = {
-  phase: 'idle' | 'verifying' | 'ready' | 'expired' | 'error';
+  phase: 'checking' | 'idle' | 'verifying' | 'ready' | 'expired' | 'error';
   authKey: string | null;
   token: string | null;
   message: string;

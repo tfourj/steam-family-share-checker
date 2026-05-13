@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { appConfig } from '../utils/config';
 
 type UseTurnstileOptions = {
+  enabled: boolean;
   onSuccess: (token: string) => void;
   onExpired: () => void;
   onError: () => void;
@@ -38,7 +39,7 @@ function ensureTurnstileScript() {
   });
 }
 
-export function useTurnstile({ onSuccess, onExpired, onError }: UseTurnstileOptions) {
+export function useTurnstile({ enabled, onSuccess, onExpired, onError }: UseTurnstileOptions) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const widgetIdRef = useRef<string | null>(null);
   const callbacksRef = useRef({ onSuccess, onExpired, onError });
@@ -50,6 +51,13 @@ export function useTurnstile({ onSuccess, onExpired, onError }: UseTurnstileOpti
 
   useEffect(() => {
     let isCancelled = false;
+
+    if (!enabled) {
+      setIsLoaded(false);
+      return () => {
+        isCancelled = true;
+      };
+    }
 
     void ensureTurnstileScript()
       .then(() => {
@@ -84,7 +92,7 @@ export function useTurnstile({ onSuccess, onExpired, onError }: UseTurnstileOpti
         widgetIdRef.current = null;
       }
     };
-  }, []);
+  }, [enabled]);
 
   function reset() {
     if (widgetIdRef.current && window.turnstile) {

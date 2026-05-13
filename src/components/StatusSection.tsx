@@ -28,7 +28,9 @@ export function StatusSection({
   onError,
 }: StatusSectionProps) {
   const [isOverlayDismissed, setIsOverlayDismissed] = useState(false);
+  const isCheckingAuth = authPhase === 'checking';
   const { containerRef, isLoaded, reset } = useTurnstile({
+    enabled: !isCheckingAuth && authPhase !== 'ready',
     onSuccess,
     onExpired,
     onError,
@@ -36,7 +38,9 @@ export function StatusSection({
   const canDismissOverlay = authPhase === 'error' || authPhase === 'expired';
   const isBlockingOverlay = authPhase !== 'ready' && !isOverlayDismissed;
   const overlayTitle =
-    authPhase === 'error'
+    authPhase === 'checking'
+      ? 'Checking verification'
+      : authPhase === 'error'
       ? 'Verification failed'
       : authPhase === 'expired'
         ? 'Verification expired'
@@ -92,9 +96,15 @@ export function StatusSection({
           <h2 id="turnstile-title">{overlayTitle}</h2>
           <p className={`turnstile-message tone-${authTone}`}>{authMessage}</p>
 
-          <div className="turnstile-shell">
-            <div ref={containerRef} className="turnstile-slot" />
-          </div>
+          {isCheckingAuth ? (
+            <div className="auth-loading" aria-label="Checking saved verification">
+              <span />
+            </div>
+          ) : (
+            <div className="turnstile-shell">
+              <div ref={containerRef} className="turnstile-slot" />
+            </div>
+          )}
 
           {canDismissOverlay ? (
             <div className="button-row turnstile-actions">

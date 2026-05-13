@@ -325,6 +325,27 @@ input {
   justify-content: center;
 }
 
+.auth-loading {
+  min-height: 70px;
+  display: grid;
+  place-items: center;
+}
+
+.auth-loading span {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 999px;
+  border: 2px solid #3f3f46;
+  border-top-color: var(--accent-strong);
+  animation: auth-spin 800ms linear infinite;
+}
+
+@keyframes auth-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .turnstile-overlay {
   position: fixed;
   inset: 0;
